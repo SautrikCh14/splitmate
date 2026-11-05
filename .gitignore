@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment files and secrets (never commit these)
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Prisma local artifacts
+server/prisma/*.db
+server/prisma/*.db-journal
+
+# Editor and OS files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local database dumps
+*.sql.bak
+*.dump
