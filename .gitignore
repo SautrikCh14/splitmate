@@ -31,3 +31,5 @@ desktop.ini
 # Local database dumps
 *.sql.bak
 *.dump
+
+generated/
