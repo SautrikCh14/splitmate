@@ -3,6 +3,10 @@ import LandingNav from '../components/landing/LandingNav';
 import HeroPreview from '../components/landing/HeroPreview';
 import Features from '../components/landing/Features';
 import HowItWorks from '../components/landing/HowItWorks';
+import WhySplitMate from '../components/landing/WhySplitMate';
+import About from '../components/landing/About';
+import Faq from '../components/landing/Faq';
+import Footer from '../components/landing/Footer';
 import { buttonClasses } from '../components/ui/Button';
 
 export default function Landing() {
@@ -46,7 +50,12 @@ export default function Landing() {
 
         <Features />
         <HowItWorks />
+        <WhySplitMate />
+        <About />
+        <Faq />
       </main>
+
+      <Footer />
     </div>
   );
 }

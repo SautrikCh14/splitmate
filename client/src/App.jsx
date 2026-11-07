@@ -12,6 +12,9 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<PagePlaceholder title="Login" />} />
         <Route path="/register" element={<PagePlaceholder title="Register" />} />
+                <Route path="/contact" element={<PagePlaceholder title="Contact" />} />
+        <Route path="/privacy" element={<PagePlaceholder title="Privacy Policy" />} />
+        <Route path="/terms" element={<PagePlaceholder title="Terms" />} />
 
         {/* App pages inside the shell */}
         <Route element={<AppShell />}>
