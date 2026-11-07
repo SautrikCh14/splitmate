@@ -18,6 +18,12 @@
   --color-accent-soft: #e6e1f8;
   --color-positive: #28694c;
   --color-negative: #b0402f;
+    /* Chart colors */
+  --color-chart-1: #6750d8;
+  --color-chart-2: #2f7d5b;
+  --color-chart-3: #c9594b;
+  --color-chart-4: #c8923a;
+  --color-chart-5: #4a7fa8;
 
   /* Shadows: neumorphic, two strengths each */
   --shadow-raised: 6px 6px 14px rgba(163, 157, 141, 0.45),

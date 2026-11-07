@@ -12,3 +12,11 @@ export function formatMoney(paise, { sign = false } = {}) {
   if (negative) return `−${text}`;
   return sign && paise > 0 ? `+${text}` : text;
 }
+
+// Short form for chart axes, from integer paise: "₹950", "₹4k", "₹1.2L".
+export function formatCompactMoney(paise) {
+  const rupees = Math.round(paise / 100);
+  if (rupees >= 100000) return `₹${Number((rupees / 100000).toFixed(1))}L`;
+  if (rupees >= 1000) return `₹${Number((rupees / 1000).toFixed(1))}k`;
+  return `₹${rupees}`;
+}

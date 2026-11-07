@@ -3,11 +3,13 @@ import { Plus, Users, HandCoins } from 'lucide-react';
 import { buttonClasses } from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import BalanceSummary from '../components/dashboard/BalanceSummary';
+import SpendingCharts from '../components/dashboard/SpendingCharts';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import OutstandingBalances from '../components/dashboard/OutstandingBalances';
 import MyGroups from '../components/dashboard/MyGroups';
 import ActivityFeed from '../components/dashboard/ActivityFeed';
 import { dashboardPlaceholder as data } from '../data/dashboardPlaceholder';
+import { chartsPlaceholder as charts } from '../data/chartsPlaceholder';
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -46,6 +48,8 @@ export default function Dashboard() {
       </header>
 
       <BalanceSummary summary={data.summary} />
+
+      <SpendingCharts monthly={charts.monthly} categories={charts.categories} />
 
       <div className="grid gap-5 lg:grid-cols-12">
         <RecentTransactions transactions={data.transactions} />

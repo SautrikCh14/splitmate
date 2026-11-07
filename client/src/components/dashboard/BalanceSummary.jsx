@@ -38,7 +38,7 @@ export default function BalanceSummary({ summary }) {
               <dt className={labelClass}>{item.label}</dt>
               <dd
                 className={cn(
-                  'mt-3 font-display text-3xl font-semibold tabular-nums',
+                  'mt-3 font-display text-2xl font-semibold tabular-nums',
                   item.tone
                 )}
               >
