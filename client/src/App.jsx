@@ -5,6 +5,7 @@ import PagePlaceholder from './pages/PagePlaceholder';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
 
 export default function App() {
   return (
@@ -21,9 +22,11 @@ export default function App() {
 
         {/* App pages inside the shell */}
         <Route element={<AppShell />}>
-          <Route path="/dashboard" element={<PagePlaceholder title="Dashboard" />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/groups" element={<PagePlaceholder title="Groups" />} />
+          <Route path="/groups/new" element={<PagePlaceholder title="Create group" />} />
           <Route path="/expenses" element={<PagePlaceholder title="All expenses" />} />
+          <Route path="/expenses/new" element={<PagePlaceholder title="Add expense" />} />
           <Route path="/balances" element={<PagePlaceholder title="Balances" />} />
           <Route path="/settlements" element={<PagePlaceholder title="Settlements" />} />
           <Route path="/analytics" element={<PagePlaceholder title="Analytics" />} />
