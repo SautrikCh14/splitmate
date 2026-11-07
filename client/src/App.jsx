@@ -3,6 +3,8 @@ import { Toaster } from 'sonner';
 import AppShell from './components/layout/AppShell';
 import PagePlaceholder from './pages/PagePlaceholder';
 import Landing from './pages/Landing';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 export default function App() {
   return (
@@ -10,9 +12,10 @@ export default function App() {
       <Routes>
         {/* Public pages */}
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<PagePlaceholder title="Login" />} />
-        <Route path="/register" element={<PagePlaceholder title="Register" />} />
-                <Route path="/contact" element={<PagePlaceholder title="Contact" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<PagePlaceholder title="Forgot password" />} />
+        <Route path="/contact" element={<PagePlaceholder title="Contact" />} />
         <Route path="/privacy" element={<PagePlaceholder title="Privacy Policy" />} />
         <Route path="/terms" element={<PagePlaceholder title="Terms" />} />
 
