@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import LandingNav from '../components/landing/LandingNav';
 import HeroPreview from '../components/landing/HeroPreview';
+import Features from '../components/landing/Features';
+import HowItWorks from '../components/landing/HowItWorks';
 import { buttonClasses } from '../components/ui/Button';
 
 export default function Landing() {
@@ -11,12 +13,13 @@ export default function Landing() {
       <main>
         <section className="overflow-x-clip">
           <div className="mx-auto grid max-w-6xl gap-14 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:py-24">
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-6">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted">
                 Group expense manager
               </p>
               <h1 className="mt-4 font-display text-5xl font-semibold leading-[1.05] sm:text-6xl">
-                Split expenses. Not friendships.
+                <span className="block">Split expenses.</span>
+                <span className="block">Not friendships.</span>
               </h1>
               <p className="mt-6 max-w-md text-lg text-muted">
                 Manage shared expenses, track balances and settle up effortlessly with
@@ -35,11 +38,14 @@ export default function Landing() {
               </div>
             </div>
 
-            <div className="lg:col-span-7 lg:translate-x-16">
+            <div className="lg:col-span-6 lg:translate-x-12">
               <HeroPreview />
             </div>
           </div>
         </section>
+
+        <Features />
+        <HowItWorks />
       </main>
     </div>
   );

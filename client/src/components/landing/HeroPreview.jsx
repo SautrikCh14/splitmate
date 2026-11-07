@@ -30,10 +30,10 @@ export default function HeroPreview() {
           </p>
           <p className="mt-1 text-sm text-muted">You are owed, in total</p>
         </div>
-        <div className="flex -space-x-2">
-          <Avatar name="Alex Sharma" size="sm" className="ring-2 ring-paper" />
-          <Avatar name="Rahul Verma" size="sm" className="ring-2 ring-paper" />
-          <Avatar name="Aman Gupta" size="sm" className="ring-2 ring-paper" />
+                <div className="flex -space-x-2">
+          <Avatar name="Alex Sharma" className="ring-2 ring-paper" />
+          <Avatar name="Rahul Verma" className="ring-2 ring-paper" />
+          <Avatar name="Aman Gupta" className="ring-2 ring-paper" />
         </div>
       </div>
 
