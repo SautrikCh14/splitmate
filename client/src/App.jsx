@@ -2,13 +2,14 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import AppShell from './components/layout/AppShell';
 import PagePlaceholder from './pages/PagePlaceholder';
+import Landing from './pages/Landing';
 
 export default function App() {
   return (
     <>
       <Routes>
         {/* Public pages */}
-        <Route path="/" element={<PagePlaceholder title="Landing page" />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<PagePlaceholder title="Login" />} />
         <Route path="/register" element={<PagePlaceholder title="Register" />} />
 
