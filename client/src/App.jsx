@@ -1,53 +1,31 @@
-import { Inbox } from 'lucide-react';
-import Button from './components/ui/Button';
-import Input from './components/ui/Input';
-import Panel from './components/ui/Panel';
-import Avatar from './components/ui/Avatar';
-import Badge from './components/ui/Badge';
-import EmptyState from './components/ui/EmptyState';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import AppShell from './components/layout/AppShell';
+import PagePlaceholder from './pages/PagePlaceholder';
 
 export default function App() {
   return (
-    <main className="mx-auto max-w-3xl space-y-8 p-8">
-      <h1 className="font-display text-4xl font-semibold">Component kit</h1>
+    <>
+      <Routes>
+        {/* Public pages */}
+        <Route path="/" element={<PagePlaceholder title="Landing page" />} />
+        <Route path="/login" element={<PagePlaceholder title="Login" />} />
+        <Route path="/register" element={<PagePlaceholder title="Register" />} />
 
-      <div className="flex flex-wrap items-center gap-4">
-        <Button>Primary</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="danger">Delete</Button>
-        <Button variant="ghost">Ghost</Button>
-        <Button loading>Saving</Button>
-        <Button disabled>Disabled</Button>
-      </div>
+        {/* App pages inside the shell */}
+        <Route element={<AppShell />}>
+          <Route path="/dashboard" element={<PagePlaceholder title="Dashboard" />} />
+          <Route path="/groups" element={<PagePlaceholder title="Groups" />} />
+          <Route path="/expenses" element={<PagePlaceholder title="All expenses" />} />
+          <Route path="/balances" element={<PagePlaceholder title="Balances" />} />
+          <Route path="/settlements" element={<PagePlaceholder title="Settlements" />} />
+          <Route path="/analytics" element={<PagePlaceholder title="Analytics" />} />
+          <Route path="/profile" element={<PagePlaceholder title="Profile & settings" />} />
+        </Route>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Input label="Full name" placeholder="Alex Sharma" />
-        <Input
-          label="Email"
-          placeholder="you@example.com"
-          error="Enter a valid email address"
-        />
-      </div>
-
-      <div className="flex items-center gap-4">
-        <Avatar name="Alex Sharma" />
-        <Avatar name="Rahul Verma" />
-        <Avatar name="Aman Gupta" size="lg" />
-        <Badge>Member</Badge>
-        <Badge tone="accent">Owner</Badge>
-        <Badge tone="positive">Settled</Badge>
-        <Badge tone="negative">Owes you</Badge>
-      </div>
-
-      <Panel>
-        <EmptyState
-          icon={Inbox}
-          title="No expenses yet"
-          description="Add your first shared expense to start tracking balances."
-        >
-          <Button>Add expense</Button>
-        </EmptyState>
-      </Panel>
-    </main>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Toaster position="top-right" />
+    </>
   );
 }
