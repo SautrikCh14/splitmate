@@ -1,1 +1,63 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/fraunces";
+
+@theme {
+  /* Fonts */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+
+  /* Colors */
+  --color-paper: #ecebe5;
+  --color-panel: #f3f2ed;
+  --color-ink: #20202a;
+  --color-muted: #5f5f6e;
+  --color-line: #d9d6cc;
+  --color-accent: #6750d8;
+  --color-accent-strong: #5640c0;
+  --color-accent-soft: #e6e1f8;
+  --color-positive: #28694c;
+  --color-negative: #b0402f;
+
+  /* Shadows: neumorphic, two strengths each */
+  --shadow-raised: 6px 6px 14px rgba(163, 157, 141, 0.45),
+    -6px -6px 14px rgba(255, 255, 255, 0.85);
+  --shadow-raised-sm: 3px 3px 7px rgba(163, 157, 141, 0.45),
+    -3px -3px 7px rgba(255, 255, 255, 0.85);
+  --shadow-inset: inset 3px 3px 7px rgba(163, 157, 141, 0.45),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+
+  /* Radii */
+  --radius-control: 8px;
+  --radius-panel: 14px;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
