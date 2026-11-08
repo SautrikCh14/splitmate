@@ -7,8 +7,273 @@ datasource db {
   provider = "postgresql"
 }
 
+// ---------- Enums ----------
+
+enum GroupRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum SplitType {
+  EQUAL
+  EXACT
+  PERCENTAGE
+  SHARES
+}
+
+enum Category {
+  FOOD
+  TRAVEL
+  SHOPPING
+  ENTERTAINMENT
+  ACCOMMODATION
+  GROCERIES
+  UTILITIES
+  OTHER
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  BANK_TRANSFER
+  OTHER
+}
+
+enum SettlementStatus {
+  COMPLETED
+  VOIDED
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum ActivityAction {
+  GROUP_CREATED
+  MEMBER_JOINED
+  MEMBER_LEFT
+  MEMBER_REMOVED
+  EXPENSE_ADDED
+  EXPENSE_EDITED
+  EXPENSE_DELETED
+  SETTLEMENT_RECORDED
+  SETTLEMENT_VOIDED
+}
+
+// ---------- Models ----------
+// Money is always stored as integer paise (₹150.50 = 15050).
+// Percentages are stored as basis points (33.33% = 3333, 100% = 10000).
+
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
+  id                      String    @id @default(cuid())
+  name                    String
+  email                   String    @unique // always stored lowercase
+  passwordHash            String
+  avatar                  String? // colour key for the initials avatar
+  preferredCurrency       String    @default("INR")
+  theme                   Theme     @default(SYSTEM)
+  notificationPrefs       Json?
+  notificationsLastReadAt DateTime?
+  deletedAt               DateTime? // set when an account is anonymised
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  groupsCreated       Group[]
+  memberships         GroupMember[]
+  expensesPaid        Expense[]            @relation("ExpensePayer")
+  expensesCreated     Expense[]            @relation("ExpenseCreator")
+  splits              ExpenseSplit[]
+  settlementsPaid     Settlement[]         @relation("SettlementPayer")
+  settlementsReceived Settlement[]         @relation("SettlementReceiver")
+  activities          Activity[]
+  comments            ExpenseComment[]
+  recurringPaid       RecurringExpense[]   @relation("RecurringPayer")
+  recurringCreated    RecurringExpense[]   @relation("RecurringCreator")
+  passwordResetTokens PasswordResetToken[]
+
+  @@map("users")
+}
+
+model Group {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  icon            String? // visual identifier, e.g. an emoji or icon key
+  currency        String    @default("INR")
+  inviteCode      String    @unique
+  inviteExpiresAt DateTime?
+  createdById     String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  createdBy         User               @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  members           GroupMember[]
+  expenses          Expense[]
+  settlements       Settlement[]
+  activities        Activity[]
+  recurringExpenses RecurringExpense[]
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id       String    @id @default(cuid())
+  userId   String
+  groupId  String
+  role     GroupRole @default(MEMBER)
+  joinedAt DateTime  @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+  @@index([groupId])
+  @@map("group_members")
+}
+
+model Expense {
+  id                 String    @id @default(cuid())
+  description        String
+  amount             Int // paise
+  paidById           String
+  createdById        String
+  groupId            String
+  category           Category  @default(OTHER)
+  splitType          SplitType
+  date               DateTime  @db.Date
+  notes              String?
+  recurringExpenseId String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  paidBy           User              @relation("ExpensePayer", fields: [paidById], references: [id], onDelete: Restrict)
+  createdBy        User              @relation("ExpenseCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  group            Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  recurringExpense RecurringExpense? @relation(fields: [recurringExpenseId], references: [id], onDelete: SetNull)
+  splits           ExpenseSplit[]
+  comments         ExpenseComment[]
+
+  @@index([groupId, date])
+  @@index([paidById])
+  @@map("expenses")
+}
+
+model ExpenseSplit {
+  id         String @id @default(cuid())
+  expenseId  String
+  userId     String
+  amount     Int // paise: this person's share
+  percentage Int? // basis points, only for PERCENTAGE splits
+  shares     Int? // only for SHARES splits
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([expenseId, userId])
+  @@index([userId])
+  @@map("expense_splits")
+}
+
+model Settlement {
+  id            String           @id @default(cuid())
+  groupId       String
+  paidById      String
+  paidToId      String
+  amount        Int // paise
+  paymentMethod PaymentMethod    @default(CASH)
+  status        SettlementStatus @default(COMPLETED)
+  date          DateTime         @db.Date
+  notes         String?
+  createdAt     DateTime         @default(now())
+
+  group  Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  paidBy User  @relation("SettlementPayer", fields: [paidById], references: [id], onDelete: Restrict)
+  paidTo User  @relation("SettlementReceiver", fields: [paidToId], references: [id], onDelete: Restrict)
+
+  @@index([groupId, date])
+  @@index([paidById])
+  @@index([paidToId])
+  @@map("settlements")
+}
+
+model Activity {
+  id          String         @id @default(cuid())
+  groupId     String
+  userId      String
+  action      ActivityAction
+  description String
+  metadata    Json? // amounts and names at the time, so history survives edits
+  createdAt   DateTime       @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([groupId, createdAt])
+  @@map("activities")
+}
+
+model ExpenseComment {
+  id        String   @id @default(cuid())
+  expenseId String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([expenseId])
+  @@map("expense_comments")
+}
+
+model RecurringExpense {
+  id              String    @id @default(cuid())
+  groupId         String
+  createdById     String
+  paidById        String
+  description     String
+  amount          Int // paise
+  category        Category  @default(OTHER)
+  splitType       SplitType
+  splitConfig     Json // participants and their weights, validated by the server
+  frequency       Frequency
+  nextDueDate     DateTime  @db.Date
+  endDate         DateTime? @db.Date
+  lastGeneratedAt DateTime?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdBy User      @relation("RecurringCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  paidBy    User      @relation("RecurringPayer", fields: [paidById], references: [id], onDelete: Restrict)
+  expenses  Expense[]
+
+  @@index([groupId])
+  @@index([isActive, nextDueDate])
+  @@map("recurring_expenses")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique // only a hash of the token is stored
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
 }
