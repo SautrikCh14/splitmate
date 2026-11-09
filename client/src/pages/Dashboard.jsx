@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Plus, Users, HandCoins } from 'lucide-react';
-import { buttonClasses } from '../components/ui/Button';
+import { buttonClasses } from '../components/ui/buttonClasses';
 import Badge from '../components/ui/Badge';
 import BalanceSummary from '../components/dashboard/BalanceSummary';
 import SpendingCharts from '../components/dashboard/SpendingCharts';
@@ -10,6 +10,7 @@ import MyGroups from '../components/dashboard/MyGroups';
 import ActivityFeed from '../components/dashboard/ActivityFeed';
 import { dashboardPlaceholder as data } from '../data/dashboardPlaceholder';
 import { chartsPlaceholder as charts } from '../data/chartsPlaceholder';
+import { useAuth } from '../hooks/useAuth';
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -19,7 +20,8 @@ function getGreeting() {
 }
 
 export default function Dashboard() {
-  const firstName = data.user.name.split(' ')[0];
+      const { user } = useAuth();
+      const firstName = user.name.split(' ')[0];
 
   return (
     <div className="space-y-8">

@@ -4,9 +4,12 @@ import { toast } from 'sonner';
 import AuthLayout from '../components/auth/AuthLayout';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import { useAuth } from '../hooks/useAuth';
 import { validateRegister } from '../utils/authValidation';
+import { getErrorMessage, getFieldErrors } from '../utils/apiError';
 
 export default function Register() {
+  const { register } = useAuth();
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -14,6 +17,8 @@ export default function Register() {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -21,14 +26,24 @@ export default function Register() {
     if (errors[name]) setErrors((current) => ({ ...current, [name]: undefined }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setFormError('');
+
     const found = validateRegister(values);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
-    // Real registration is wired to the backend in Phase 4.
-    toast.info('Registration is not connected to the server yet. That arrives in Phase 4.');
+    setSubmitting(true);
+    try {
+      await register(values);
+      toast.success('Account created. Welcome to SplitMate!');
+    } catch (error) {
+      const fieldErrors = getFieldErrors(error);
+      if (Object.keys(fieldErrors).length > 0) setErrors(fieldErrors);
+      else setFormError(getErrorMessage(error));
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -45,6 +60,12 @@ export default function Register() {
       }
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-5">
+        {formError && (
+          <p role="alert" className="rounded-control border border-negative px-4 py-3 text-sm text-negative">
+            {formError}
+          </p>
+        )}
+
         <Input
           label="Full name"
           name="name"
@@ -84,7 +105,7 @@ export default function Register() {
           error={errors.confirmPassword}
         />
 
-        <Button type="submit" size="lg" className="w-full">
+        <Button type="submit" size="lg" className="w-full" loading={submitting}>
           Create account
         </Button>
       </form>

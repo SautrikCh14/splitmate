@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 import AuthLayout from '../components/auth/AuthLayout';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import { useAuth } from '../hooks/useAuth';
 import { validateLogin } from '../utils/authValidation';
+import { getErrorMessage, getFieldErrors } from '../utils/apiError';
 
 export default function Login() {
+  const { login } = useAuth();
   const [values, setValues] = useState({ email: '', password: '' });
   const [remember, setRemember] = useState(false);
   const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -17,14 +21,24 @@ export default function Login() {
     if (errors[name]) setErrors((current) => ({ ...current, [name]: undefined }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setFormError('');
+
     const found = validateLogin(values);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
-    // Real sign-in is wired to the backend in Phase 4.
-    toast.info('Sign-in is not connected to the server yet. That arrives in Phase 4.');
+    setSubmitting(true);
+    try {
+      // On success the AuthProvider stores the user and the route guard moves us onward.
+      await login({ email: values.email, password: values.password, remember });
+    } catch (error) {
+      const fieldErrors = getFieldErrors(error);
+      if (Object.keys(fieldErrors).length > 0) setErrors(fieldErrors);
+      else setFormError(getErrorMessage(error));
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -41,6 +55,12 @@ export default function Login() {
       }
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-5">
+        {formError && (
+          <p role="alert" className="rounded-control border border-negative px-4 py-3 text-sm text-negative">
+            {formError}
+          </p>
+        )}
+
         <Input
           label="Email"
           name="email"
@@ -76,7 +96,7 @@ export default function Login() {
           </Link>
         </div>
 
-        <Button type="submit" size="lg" className="w-full">
+        <Button type="submit" size="lg" className="w-full" loading={submitting}>
           Log in
         </Button>
       </form>

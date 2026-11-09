@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Panel from '../ui/Panel';
 import Avatar from '../ui/Avatar';
 import PanelHeader from './PanelHeader';
-import { buttonClasses } from '../ui/Button';
+import { buttonClasses } from '../ui/buttonClasses';
 import { formatMoney } from '../../utils/formatMoney';
 import { cn } from '../../utils/cn';
 

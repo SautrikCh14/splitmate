@@ -7,7 +7,7 @@ import WhySplitMate from '../components/landing/WhySplitMate';
 import About from '../components/landing/About';
 import Faq from '../components/landing/Faq';
 import Footer from '../components/landing/Footer';
-import { buttonClasses } from '../components/ui/Button';
+import { buttonClasses } from '../components/ui/buttonClasses';
 
 export default function Landing() {
   return (

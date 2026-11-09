@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { buttonClasses } from '../ui/Button';
+import { buttonClasses } from '../ui/buttonClasses';
+import { useAuth } from '../../hooks/useAuth';
 
 const links = [
   { href: '#features', label: 'Features' },
@@ -8,6 +9,8 @@ const links = [
 ];
 
 export default function LandingNav() {
+  const { user } = useAuth();
+
   return (
     <header className="border-b border-line">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
@@ -28,12 +31,20 @@ export default function LandingNav() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link to="/login" className={buttonClasses({ variant: 'ghost', size: 'sm' })}>
-            Login
-          </Link>
-          <Link to="/register" className={buttonClasses({ size: 'sm' })}>
-            Get Started
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className={buttonClasses({ size: 'sm' })}>
+              Open dashboard
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className={buttonClasses({ variant: 'ghost', size: 'sm' })}>
+                Login
+              </Link>
+              <Link to="/register" className={buttonClasses({ size: 'sm' })}>
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
