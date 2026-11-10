@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const email = z
+export const email = z
   .string('Enter your email address')
   .trim()
   .toLowerCase()
