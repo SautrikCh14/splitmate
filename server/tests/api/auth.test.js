@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import app from '../../src/app.js';
 import { prisma } from '../../src/config/db.js';
 import { env } from '../../src/config/env.js';
+import { resetDatabase } from '../helpers.js';
 
 const validUser = {
   name: 'Alex Sharma',
@@ -15,11 +16,11 @@ const validUser = {
 const cookieHeader = (res) => res.headers['set-cookie']?.find((c) => c.startsWith('splitmate_token='));
 
 beforeEach(async () => {
-  await prisma.user.deleteMany();
+  await resetDatabase();
 });
 
 afterAll(async () => {
-  await prisma.user.deleteMany();
+  await resetDatabase();
   await prisma.$disconnect();
 });
 
