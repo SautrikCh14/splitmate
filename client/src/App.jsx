@@ -8,6 +8,9 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import Groups from './pages/Groups';
+import CreateGroup from './pages/CreateGroup';
+import JoinGroup from './pages/JoinGroup';
 
 export default function App() {
   return (
@@ -30,8 +33,10 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/groups" element={<PagePlaceholder title="Groups" />} />
-            <Route path="/groups/new" element={<PagePlaceholder title="Create group" />} />
+            <Route path="/groups" element={<Groups />} />
+            <Route path="/groups/new" element={<CreateGroup />} />
+            <Route path="/groups/join" element={<JoinGroup />} />
+            <Route path="/groups/:id" element={<PagePlaceholder title="Group details" />} />
             <Route path="/expenses" element={<PagePlaceholder title="All expenses" />} />
             <Route path="/expenses/new" element={<PagePlaceholder title="Add expense" />} />
             <Route path="/balances" element={<PagePlaceholder title="Balances" />} />
