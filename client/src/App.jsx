@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Groups from './pages/Groups';
 import CreateGroup from './pages/CreateGroup';
 import JoinGroup from './pages/JoinGroup';
+import GroupDetails from './pages/GroupDetails';
 
 export default function App() {
   return (
@@ -36,7 +37,7 @@ export default function App() {
             <Route path="/groups" element={<Groups />} />
             <Route path="/groups/new" element={<CreateGroup />} />
             <Route path="/groups/join" element={<JoinGroup />} />
-            <Route path="/groups/:id" element={<PagePlaceholder title="Group details" />} />
+            <Route path="/groups/:id" element={<GroupDetails />} />
             <Route path="/expenses" element={<PagePlaceholder title="All expenses" />} />
             <Route path="/expenses/new" element={<PagePlaceholder title="Add expense" />} />
             <Route path="/balances" element={<PagePlaceholder title="Balances" />} />

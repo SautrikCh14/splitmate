@@ -12,3 +12,12 @@ export function validateGroupForm({ name, description }) {
 export function validateJoinCode(code) {
   return code.trim() ? {} : { code: 'Enter an invite code' };
 }
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function validateEmail(email) {
+  const value = email.trim();
+  if (!value) return 'Enter an email address';
+  if (!EMAIL_PATTERN.test(value)) return 'Enter a valid email address';
+  return '';
+}
