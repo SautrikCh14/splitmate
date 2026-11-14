@@ -21,8 +21,7 @@ router.get('/', groups.listGroups);
 router.post('/', validate(createGroupSchema), groups.createGroup);
 router.post('/join', joinLimiter, validate(joinGroupSchema), members.joinGroup);
 
-// Every route below follows the same order: membership first (404 for strangers),
-// then permission (403), then input validation (400).
+
 router.get('/:id', loadMembership, requirePermission('group:view'), groups.getGroup);
 router.put('/:id', loadMembership, requirePermission('group:edit'), validate(updateGroupSchema), groups.updateGroup);
 router.delete('/:id', loadMembership, requirePermission('group:delete'), groups.deleteGroup);
